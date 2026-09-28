@@ -87,6 +87,15 @@ html.reduce-motion {
   animation: workshop-dialog-enter .24s ease-out;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .dashboard-view { animation: workshop-dialog-enter .25s ease-out; }
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .dashboard-shell section, .dashboard-shell article { background-color: #faf7f1; }
+  .dashboard-shell aside { background-color: #501c32; }
+}
+
 .ribbon-track {
   animation: ribbon-loop 32s linear infinite;
   will-change: transform;

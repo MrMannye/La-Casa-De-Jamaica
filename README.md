@@ -47,6 +47,21 @@ La sección «Talleres del mes» muestra las tres primeras fechas y enlaza al ca
 
 Pruebas de calendario, categorías, imágenes y enlaces de consulta: `pnpm test`.
 
+## Dashboard de demostración
+
+`/dashboard` reproduce el prototipo administrativo con Tailwind: Resumen, Talleres y
+Reservas. Las vistas admiten enlaces directos (`#overview`, `#workshops`, `#bookings`),
+filtros de categoría, orden por ocupación, búsqueda sin acentos y fichas de reserva.
+El modelo determinista está en `app/data/dashboard.ts`; reutiliza la agenda pública.
+Solo las reservas demo pagadas suman ingresos y lugares confirmados. Las compras
+pueden incluir varios lugares, y los pagos pendientes se contabilizan por separado.
+
+El panel es una **demo pública sin autenticación**, con personas, pagos y cupos
+ficticios; no guarda cambios ni conecta con servicios de pagos o reservas. Antes de
+usar información real requiere autenticación, autorización y un backend. No incluir
+datos personales reales en el modelo del cliente. Las pruebas incluyen la conciliación
+de indicadores, estados de pago y filtros del dashboard.
+
 ```bash
 pnpm install
 pnpm dev
