@@ -61,7 +61,7 @@ export function BouquetGallery({ reduceMotion }: { reduceMotion: boolean | null 
   const root = useRef<HTMLDivElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
-  const [paused, setPaused] = useState(false);
+  const [paused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const selected = bouquets[selectedIndex];
