@@ -1,12 +1,86 @@
-:root {
-  --cream: #f8f4e9;
-  --wine: #501c32;
-  --muted: #765e65;
-  --yellow: #f3db79;
+@import "tailwindcss";
+
+@font-face {
+  font-family: Editorial;
+  src: url('/fonts/editorial.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
 }
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--cream); color: var(--wine); font-family: Arial, Helvetica, sans-serif; }
-a { color: inherit; text-decoration: none; }
-a:focus-visible, input:focus-visible { outline: 3px solid #b84812; outline-offset: 4px; }
+@font-face {
+  font-family: Editorial;
+  src: url('/fonts/editorial-italic.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@theme {
+  --color-cream: #f8f4e9;
+  --color-wine: #501c32;
+  --color-muted: #765e65;
+  --color-yellow: #f3db79;
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-editorial: Editorial, Georgia, 'Times New Roman', serif;
+}
+
+/* Preserve the prototype's breakpoints, including its short-screen layouts. */
+@custom-variant wide (@media (min-width: 1600px));
+@custom-variant tablet (@media (max-width: 1050px));
+@custom-variant mobile (@media (max-width: 700px));
+@custom-variant compact-desktop (@media (max-height: 740px) and (min-width: 701px));
+@custom-variant compact-mobile (@media (max-height: 740px) and (max-width: 700px));
+@custom-variant landscape-short (@media (max-height: 520px));
+
+@layer base {
+  html {
+    @apply scroll-smooth scroll-pt-[132px] mobile:scroll-pt-[106px];
+  }
+
+  body {
+    @apply bg-cream font-sans text-[16px] leading-[normal] text-wine antialiased;
+  }
+
+  a, button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 3px solid #b84812;
+    outline-offset: 5px;
+  }
+
+  ::selection {
+    @apply bg-wine text-cream;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply relative py-3.5 after:absolute after:bottom-2 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-wine after:transition-transform after:duration-300 hover:after:scale-x-100;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header {
+    background: rgb(248 244 233 / 96%);
+  }
+}
+
+html.reduce-motion {
+  scroll-behavior: auto;
+}
+
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after {
+  animation-duration: .01ms !important;
+  transition-duration: .01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}

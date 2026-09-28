@@ -3,39 +3,152 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import './page.css';
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Home() {
-  const root = useRef<HTMLElement>(null);
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const [reduceMotion, setReduceMotion] = useState<boolean | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    setReduceMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const syncPreference = () => setReduceMotion(preference.matches);
+    const syncHeader = () => setScrolled(window.scrollY > 24);
+    syncPreference();
+    syncHeader();
+    preference.addEventListener('change', syncPreference);
+    window.addEventListener('scroll', syncHeader, { passive: true });
+    return () => {
+      preference.removeEventListener('change', syncPreference);
+      window.removeEventListener('scroll', syncHeader);
+    };
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle('reduce-motion', reduceMotion === true);
+    return () => document.documentElement.classList.remove('reduce-motion');
+  }, [reduceMotion]);
+
   useGSAP(() => {
-    if (reduceMotion) return;
-    gsap.from('.hero-art img', { scale: 1.06, duration: 1.6, ease: 'power2.out' });
-    gsap.from('.hero-title span', { y: 34, opacity: 0, duration: .9, stagger: .12, delay: .1, ease: 'power3.out' });
-    gsap.from('.hero-item', { y: 16, opacity: 0, duration: .7, stagger: .1, delay: .35, ease: 'power2.out' });
-    gsap.from('.hero-seal', { scale: .88, rotation: -8, opacity: 0, duration: .9, delay: .45, ease: 'power2.out' });
+    // Read the system preference before starting any entrance animation.
+    if (reduceMotion !== false) return;
+
+    gsap.from('.hero-art img', { scale: 1.06, duration: 1.65, ease: 'power2.out' });
+    gsap.from('.hero-line', { y: 35, opacity: 0, duration: 1, stagger: 0.13, ease: 'power3.out', delay: 0.1 });
+    gsap.from('.hero-item', { y: 15, opacity: 0, duration: 0.75, stagger: 0.12, delay: 0.35, ease: 'power2.out' });
+    gsap.from('.hero-seal', { rotation: -10, scale: 0.9, opacity: 0, duration: 1.1, delay: 0.5, ease: 'power2.out' });
+
+    const media = gsap.matchMedia();
+    media.add('(min-width: 701px)', () => {
+      gsap.to('.hero-art img', {
+        y: 40,
+        ease: 'none',
+        scrollTrigger: { trigger: '#inicio', start: 'top top', end: 'bottom top', scrub: 1 },
+      });
+    });
+
+    return () => media.revert();
   }, { scope: root, dependencies: [reduceMotion], revertOnUpdate: true });
 
-  return <main ref={root} className={reduceMotion ? 'reduce-motion' : ''}>
-    <header className="site-header">
-      <a className="brand" href="#hero" aria-label="La Casita de Jamaica"><span className="brand-mark" aria-hidden="true">✳</span><span>la casita<span>de Jamaica</span></span></a>
-      <nav aria-label="Navegación principal"><a href="#hero" className="active">El comienzo</a><a href="#talleres">Talleres del mes <span aria-hidden="true">↗</span></a></nav>
-      <p className="header-note">FLORES, MANOS<br />Y UN POCO DE MAGIA.</p>
-    </header>
-    <section className="hero" id="hero" aria-labelledby="hero-title">
-      <div className="hero-art" aria-hidden="true"><Image src="/assets/hero.webp" alt="" fill priority sizes="(max-width: 800px) 100vw, 78vw" /><div className="hero-fade" /></div>
-      <div className="hero-content"><p className="eyebrow hero-item"><span aria-hidden="true">✳</span> MERCADO JAMAICA · CIUDAD DE MÉXICO</p><h1 id="hero-title" className="hero-title"><span>Un ratito</span><span><em>entre flores.</em></span></h1><p className="hero-copy hero-item">Deja que el mundo espere.<br />Aquí las manos crean y las flores hablan.</p><a className="hero-cta hero-item" href="#talleres">Encuentra tu inspiración <span aria-hidden="true">↗</span></a></div>
-      <div className="hero-seal" aria-hidden="true"><span>UN RAMO.</span><strong>Mil maneras<br />de sentir.</strong><span>LA CASITA DE JAMAICA</span></div>
-      <div className="hero-footer"><span>UN ESPACIO PARA CREAR, A TU RITMO.</span><a href="#talleres">Hay mucho por florecer <b aria-hidden="true">↓</b></a></div>
-    </section>
-    <section id="talleres" className="next-section"><p>Próximamente: talleres del mes.</p></section>
-  </main>;
+  return (
+    <div ref={root}>
+      <a href="#main" className="fixed -top-20 left-[15px] z-30 bg-wine p-3 text-white focus:top-2.5">
+        Saltar al contenido
+      </a>
+
+      <div className="absolute inset-x-0 top-0 z-20 flex h-7 items-center justify-between bg-wine px-[4.6%] text-[12px] tracking-[.09em] text-cream mobile:px-[5%] mobile:text-[10px] mobile:tracking-[.05em]">
+        <span>LA CASITA DE JAMAICA <span className="mobile:hidden">/ FLORES &amp; TALLERES</span></span>
+        <label className="flex cursor-pointer items-center gap-[7px] text-[12px] tracking-normal mobile:text-[11px]">
+          <input
+            type="checkbox"
+            disabled={reduceMotion === null}
+            checked={reduceMotion === true}
+            onChange={event => setReduceMotion(event.target.checked)}
+            className="size-3.5 accent-yellow"
+          />
+          Reducir movimiento
+        </label>
+      </div>
+
+      <header
+        data-scrolled={scrolled}
+        className="site-header fixed inset-x-[4.6%] top-[46px] z-15 flex h-[86px] items-center justify-between rounded-[22px] border border-[#ffffff85] bg-cream/[.64] px-7 shadow-[0_8px_36px_#501c320b,inset_0_1px_0_#ffffffb0] backdrop-blur-[20px] backdrop-saturate-[140%] transition-[top,background,box-shadow] duration-300 data-[scrolled=true]:top-[18px] data-[scrolled=true]:bg-cream/[.82] data-[scrolled=true]:shadow-[0_10px_36px_#501c3214,inset_0_1px_0_#ffffffb0] tablet:px-[22px] mobile:inset-x-[4%] mobile:top-[42px] mobile:h-[74px] mobile:rounded-[19px] mobile:px-[17px] mobile:data-[scrolled=true]:top-3 compact-desktop:top-10 compact-desktop:h-[70px] compact-desktop:data-[scrolled=true]:top-3"
+      >
+        <a href="#inicio" aria-label="La Casita de Jamaica, inicio" className="flex items-center gap-[13px] font-editorial text-[27px] leading-[.92] tracking-[-1.1px] mobile:gap-2 mobile:text-[21px]">
+          <span aria-hidden="true" className="font-[Georgia,serif] text-[53px] leading-none mobile:text-[36px]">✳</span>
+          <span>la casita<span className="block text-[25px] mobile:text-[20px]">de Jamaica</span></span>
+        </a>
+
+        <nav aria-label="Navegación principal" className="flex gap-[25px] text-[14px] mobile:gap-3 mobile:text-[12px]">
+          <a href="#inicio" className="nav-link mobile:hidden">El comienzo</a>
+          <a href="#ramos" className="nav-link mobile:hidden">Los ramos</a>
+          <a href="#taller" className="nav-link mobile:hidden">El taller</a>
+          <a href="#talleres" className="rounded-[30px] bg-wine px-[18px] py-[13px] whitespace-nowrap text-cream mobile:px-3.5 mobile:py-[11px] mobile:text-[11px]">
+            Talleres del mes <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
+
+        <span className="text-right text-[12px] leading-[1.55] tracking-[.12em] max-[1151px]:hidden">
+          FLORES, MANOS<br />Y UN POCO DE MAGIA.
+        </span>
+      </header>
+
+      <main id="main">
+        <section id="inicio" aria-labelledby="hero-title" className="relative flex h-svh min-h-0 items-center overflow-hidden mobile:block landscape-short:h-auto landscape-short:min-h-svh">
+          <div className="hero-art absolute inset-y-0 right-0 h-full w-[78%] overflow-hidden wide:w-[74%] tablet:opacity-90 mobile:top-auto mobile:bottom-[53px] mobile:h-[48%] mobile:w-full mobile:opacity-100 compact-mobile:h-[43%]">
+            <Image
+              src="/assets/hero.webp"
+              alt="Ramo conceptual de flores rosas, naranjas y vino iluminado por luz natural"
+              fill
+              priority
+              unoptimized
+              sizes="(max-width: 700px) 100vw, (min-width: 1600px) 74vw, 78vw"
+              className="origin-[70%_50%] object-cover object-[67%_50%] mobile:object-[72%_50%]"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,#f8f4e9_0%,#f8f4e9dd_9%,#f8f4e940_26%,transparent_45%)] tablet:bg-[linear-gradient(90deg,#f8f4e9,#f8f4e9b0_20%,transparent_65%)] mobile:bg-[linear-gradient(180deg,#f8f4e9,#f8f4e9a0_22%,transparent_53%)]" />
+          </div>
+
+          <div className="pointer-events-none relative z-1 w-[66%] pt-[155px] pb-[105px] pl-[6.2%] tablet:w-[77%] mobile:w-full mobile:px-[6%] mobile:pt-[145px] mobile:pb-0 compact-desktop:pt-[132px] compact-desktop:pb-[75px] compact-mobile:pt-[132px] landscape-short:pt-[135px] landscape-short:pb-[90px]">
+            <p className="hero-item flex items-center gap-2.5 text-[12px] leading-[1.7] font-medium tracking-[.13em] mobile:text-[10px] mobile:tracking-[.095em]">
+              <span aria-hidden="true" className="text-[20px]">✳</span>
+              MERCADO JAMAICA · CIUDAD DE MÉXICO
+            </p>
+            <h1 id="hero-title" className="mt-[27px] mb-7 font-editorial text-[clamp(75px,7.6vw,119px)] leading-[1.01] font-normal tracking-[-.057em] wide:text-[133px] tablet:text-[clamp(68px,9vw,95px)] mobile:my-[18px] mobile:text-[clamp(51px,12.8vw,82px)] mobile:leading-[1.02] compact-desktop:my-[18px] compact-desktop:text-[clamp(60px,11vh,83px)] compact-mobile:my-3.5 compact-mobile:text-[clamp(44px,11.5vw,65px)] landscape-short:text-[54px]">
+              <span className="hero-line block">Un ratito</span>
+              <span className="hero-line block"><em className="font-normal tracking-[-.055em]">entre flores.</em></span>
+            </h1>
+            <p className="hero-item max-w-80 text-[16px] leading-[1.7] mobile:text-[14px] mobile:leading-[1.55] compact-desktop:text-[14px] compact-mobile:text-[13px] compact-mobile:leading-[1.4]">
+              Deja que el mundo espere.<br />Aquí las manos crean y las flores hablan.
+            </p>
+            <a href="#ramos" className="hero-item pointer-events-auto mt-[29px] inline-flex items-center gap-8 rounded-[50px] bg-wine px-6 py-[18px] text-[14px] text-cream transition-[background,translate] duration-250 hover:-translate-y-[3px] hover:bg-[#773449] mobile:mt-5 mobile:px-[21px] mobile:py-[15px] mobile:text-[13px] compact-desktop:mt-[18px] compact-desktop:px-[22px] compact-desktop:py-3.5 compact-mobile:mt-3.5 compact-mobile:px-[18px] compact-mobile:py-[13px] compact-mobile:text-[12px]">
+              Encuentra tu inspiración <span aria-hidden="true" className="text-[21px] leading-none">↗</span>
+            </a>
+          </div>
+
+          <div className="absolute inset-x-[4.6%] bottom-[27px] z-2 flex items-center justify-between text-[11px] tracking-[.09em] mobile:inset-x-[6%] mobile:bottom-[15px]">
+            <span className="mobile:max-w-[120px] mobile:text-[8px] mobile:leading-[1.7]">UN ESPACIO PARA CREAR, A TU RITMO.</span>
+            <a href="#ramos" aria-label="Bajar a la galería de ramos" className="flex items-center gap-[18px] text-[12px] tracking-normal mobile:gap-2.5 mobile:text-[10px]">
+              <span>Hay mucho por florecer</span>
+              <span aria-hidden="true" className="grid size-10 place-items-center rounded-full border border-wine bg-cream text-[22px] mobile:size-[30px] mobile:text-[19px]">↓</span>
+            </a>
+          </div>
+
+          <div aria-hidden="true" className="hero-seal absolute right-[5.4%] bottom-[16%] z-2 flex size-[148px] flex-col items-center justify-center gap-[9px] rounded-full bg-yellow [transform:rotate(12deg)] tablet:size-[120px] mobile:right-[7%] mobile:bottom-[17%] mobile:size-[100px] compact-mobile:bottom-[14%] compact-mobile:size-[84px] landscape-short:hidden">
+            <span className="text-[9px] tracking-[.14em] tablet:text-[8px] mobile:text-[7px] compact-mobile:text-[6px]">UN RAMO.</span>
+            <b className="text-center font-editorial text-[25px] leading-[1.02] font-normal tablet:text-[22px] mobile:text-[19px] compact-mobile:text-[16px]">Mil maneras<br />de sentir.</b>
+            <span className="text-[9px] tracking-[.14em] tablet:text-[8px] mobile:text-[7px] compact-mobile:text-[6px]">LA CASITA DE JAMAICA</span>
+          </div>
+        </section>
+
+        <div className="grid gap-10 px-[7%] py-[100px] font-editorial text-[32px] mobile:px-[6%] mobile:py-[70px] mobile:text-[26px]">
+          <section id="ramos" aria-label="Galería de ramos"><p>Próximamente: los ramos.</p></section>
+          <section id="taller" aria-label="El taller"><p>Próximamente: así es el taller.</p></section>
+          <section id="talleres" aria-label="Talleres del mes"><p>Próximamente: talleres del mes.</p></section>
+        </div>
+      </main>
+    </div>
+  );
 }
