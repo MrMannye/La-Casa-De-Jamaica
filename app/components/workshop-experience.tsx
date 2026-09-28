@@ -195,10 +195,6 @@ export function WorkshopExperience({ reduceMotion }: { reduceMotion: boolean | n
         </ol>
       </div>
 
-      <p className="mx-auto mt-5 max-w-[1250px] text-center text-[12px] leading-[1.7] text-[#d6bbc4] mobile:mt-[19px]">
-        Imágenes conceptuales creadas con IA; no son fotografías de talleres reales.
-      </p>
-
       <div className="workshop-reveal mx-auto mt-[52px] mb-7 flex max-w-[1100px] items-center justify-center gap-[70px] border-t border-cream/20 pt-[58px] mobile:mt-[38px] mobile:gap-[18px] mobile:pt-9">
         <span aria-hidden="true" className="text-[40px] text-yellow mobile:text-[24px]">✳</span>
         <p className="text-center font-editorial text-[clamp(30px,3.2vw,46px)] leading-[1.18] tracking-[-.025em] mobile:text-[29px]">

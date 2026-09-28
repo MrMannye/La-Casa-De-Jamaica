@@ -5,7 +5,7 @@ import { type Workshop, workshopFullDate, workshopImage, workshopPrice, whatsapp
 export function WorkshopPhoto({ workshop, priority = false }: { workshop: Workshop; priority?: boolean }) {
   return <div className="relative h-full min-h-[220px] overflow-hidden bg-[#eee7df]">
     <Image src={workshopImage(workshop)} alt={`Imagen ilustrativa de ${workshop.name}, creada con IA`} fill unoptimized priority={priority} sizes="(max-width: 700px) 94vw, 50vw" className="object-cover" />
-    <span className="absolute bottom-2 left-2.5 rounded bg-cream/90 px-2 py-1 text-[10px] text-wine">Imagen ilustrativa · IA</span>
+    <span className="absolute bottom-2 left-2.5 rounded bg-cream/90 px-2 py-1 text-[10px] text-wine">Imagen ilustrativa</span>
   </div>;
 }
 
