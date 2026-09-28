@@ -29,7 +29,23 @@ Las tres escenas alternan imagen y texto en escritorio y se apilan en móvil.
 La línea de progreso usa las posiciones de las tarjetas sin sus transformaciones de entrada,
 se recalcula al cambiar el tamaño o cargar las fuentes y señala el paso actual.
 La preferencia de movimiento reducido del sistema elimina las entradas animadas y conserva el indicador de lectura.
-El enlace a talleres del mes conserva un destino provisional hasta implementar esa sección.
+La sección «Talleres del mes» muestra las tres primeras fechas y enlaza al calendario.
+
+## Talleres de octubre
+
+- `/talleres`: calendario de octubre de 2026, filtros por categoría, vista rápida,
+  ficha modal y lista de actividades en móvil.
+- `/talleres/oct-01` (y las demás fechas): página compartible para cada actividad.
+- `/talleres?taller=oct-01`: abre directamente la ficha, compatible con los enlaces del prototipo.
+- Los datos compartidos están en `app/data/workshops.ts`; las imágenes y el cartel
+  originales están en `public/assets/talleres`.
+- Fechas, precios y contactos proceden del prototipo. La agenda es fija, no representa
+  disponibilidad en tiempo real. Los enlaces de WhatsApp preparan una consulta:
+  no realizan reservas ni cobros. Horario, cupo y materiales deben confirmarse.
+- Las fichas admiten Escape, cierre exterior, navegación por teclado y retorno del foco.
+  En pantallas bajas el contenido se puede desplazar para no ocultar información.
+
+Pruebas de calendario, categorías, imágenes y enlaces de consulta: `pnpm test`.
 
 ```bash
 pnpm install
