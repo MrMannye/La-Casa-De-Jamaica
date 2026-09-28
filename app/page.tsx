@@ -1,65 +1,105 @@
-'use client';
+'use client'
 
-import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-import { BouquetGallery } from './components/bouquet-gallery';
-import { WorkshopExperience } from './components/workshop-experience';
-import { MonthlyWorkshops } from './components/monthly-workshops';
-import { SiteHeader } from './components/site-header';
-import { SiteFooter } from './components/site-footer';
-import { Analytics } from "@vercel/analytics/next"
+import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
+import { BouquetGallery } from './components/bouquet-gallery'
+import { WorkshopExperience } from './components/workshop-experience'
+import { MonthlyWorkshops } from './components/monthly-workshops'
+import { SiteHeader } from './components/site-header'
+import { SiteFooter } from './components/site-footer'
+import { Analytics } from '@vercel/analytics/next'
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
+gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 export default function Home() {
-  const root = useRef<HTMLDivElement>(null);
-  const [reduceMotion, setReduceMotion] = useState<boolean | null>(null);
+  const root = useRef<HTMLDivElement>(null)
+  const [reduceMotion, setReduceMotion] = useState<boolean | null>(null)
 
   useEffect(() => {
-    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const syncPreference = () => setReduceMotion(preference.matches);
-    syncPreference();
-    preference.addEventListener('change', syncPreference);
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const syncPreference = () => setReduceMotion(preference.matches)
+    syncPreference()
+    preference.addEventListener('change', syncPreference)
     return () => {
-      preference.removeEventListener('change', syncPreference);
-    };
-  }, []);
+      preference.removeEventListener('change', syncPreference)
+    }
+  }, [])
 
   useEffect(() => {
-    document.documentElement.classList.toggle('reduce-motion', reduceMotion === true);
-    return () => document.documentElement.classList.remove('reduce-motion');
-  }, [reduceMotion]);
+    document.documentElement.classList.toggle(
+      'reduce-motion',
+      reduceMotion === true,
+    )
+    return () => document.documentElement.classList.remove('reduce-motion')
+  }, [reduceMotion])
 
-  useGSAP(() => {
-    // Read the system preference before starting any entrance animation.
-    if (reduceMotion !== false) return;
+  useGSAP(
+    () => {
+      // Read the system preference before starting any entrance animation.
+      if (reduceMotion !== false) return
 
-    gsap.from('.hero-art img', { scale: 1.06, duration: 1.65, ease: 'power2.out' });
-    gsap.from('.hero-line', { y: 35, opacity: 0, duration: 1, stagger: 0.13, ease: 'power3.out', delay: 0.1 });
-    gsap.from('.hero-item', { y: 15, opacity: 0, duration: 0.75, stagger: 0.12, delay: 0.35, ease: 'power2.out' });
-    gsap.from('.hero-seal', { rotation: -10, scale: 0.9, opacity: 0, duration: 1.1, delay: 0.5, ease: 'power2.out' });
+      gsap.from('.hero-art img', {
+        scale: 1.06,
+        duration: 1.65,
+        ease: 'power2.out',
+      })
+      gsap.from('.hero-line', {
+        y: 35,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.13,
+        ease: 'power3.out',
+        delay: 0.1,
+      })
+      gsap.from('.hero-item', {
+        y: 15,
+        opacity: 0,
+        duration: 0.75,
+        stagger: 0.12,
+        delay: 0.35,
+        ease: 'power2.out',
+      })
+      gsap.from('.hero-seal', {
+        rotation: -10,
+        scale: 0.9,
+        opacity: 0,
+        duration: 1.1,
+        delay: 0.5,
+        ease: 'power2.out',
+      })
 
-    const media = gsap.matchMedia();
-    media.add('(min-width: 701px)', () => {
-      gsap.to('.hero-art img', {
-        y: 40,
-        ease: 'none',
-        scrollTrigger: { trigger: '#inicio', start: 'top top', end: 'bottom top', scrub: 1 },
-      });
-    });
+      const media = gsap.matchMedia()
+      media.add('(min-width: 701px)', () => {
+        gsap.to('.hero-art img', {
+          y: 40,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#inicio',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        })
+      })
 
-    return () => media.revert();
-  }, { scope: root, dependencies: [reduceMotion], revertOnUpdate: true });
+      return () => media.revert()
+    },
+    { scope: root, dependencies: [reduceMotion], revertOnUpdate: true },
+  )
 
   return (
     <div ref={root}>
       <SiteHeader />
 
       <main id="main">
-        <section id="inicio" aria-labelledby="hero-title" className="relative flex h-svh min-h-0 items-center overflow-hidden mobile:block landscape-short:h-auto landscape-short:min-h-svh">
+        <section
+          id="inicio"
+          aria-labelledby="hero-title"
+          className="relative flex h-svh min-h-0 items-center overflow-hidden mobile:block landscape-short:h-auto landscape-short:min-h-svh"
+        >
           <div className="hero-art absolute inset-y-0 right-0 h-full w-[78%] overflow-hidden wide:w-[74%] tablet:opacity-90 mobile:top-auto mobile:bottom-13.25 mobile:h-[48%] mobile:w-full mobile:opacity-100 compact-mobile:h-[43%]">
             <Image
               src="/assets/hero.webp"
@@ -75,25 +115,53 @@ export default function Home() {
 
           <div className="pointer-events-none relative z-1 w-[66%] pt-38.75 pb-26.25 pl-[6.2%] tablet:w-[77%] mobile:w-full mobile:px-[6%] mobile:pt-36.25 mobile:pb-0 compact-desktop:pt-33 compact-desktop:pb-18.75 compact-mobile:pt-33 landscape-short:pt-33.75 landscape-short:pb-22.5">
             <p className="hero-item flex items-center gap-2.5 text-[12px] leading-[1.7] font-medium tracking-[.13em] mobile:text-[10px] mobile:tracking-[.095em]">
-              <span aria-hidden="true" className="text-[20px]">✳</span>
+              <span aria-hidden="true" className="text-[20px]">
+                ✳
+              </span>
               MERCADO JAMAICA · CIUDAD DE MÉXICO
             </p>
-            <h1 id="hero-title" className="mt-6.75 mb-7 font-editorial text-[clamp(75px,7.6vw,119px)] leading-[1.01] font-normal tracking-[-.057em] wide:text-[133px] tablet:text-[clamp(68px,9vw,95px)] mobile:my-4.5 mobile:text-[clamp(51px,12.8vw,82px)] mobile:leading-[1.02] compact-desktop:my-4.5 compact-desktop:text-[clamp(60px,11vh,83px)] compact-mobile:my-3.5 compact-mobile:text-[clamp(44px,11.5vw,65px)] landscape-short:text-[54px]">
+            <h1
+              id="hero-title"
+              className="mt-6.75 mb-7 font-editorial text-[clamp(75px,7.6vw,119px)] leading-[1.01] font-normal tracking-[-.057em] wide:text-[133px] tablet:text-[clamp(68px,9vw,95px)] mobile:my-4.5 mobile:text-[clamp(51px,12.8vw,82px)] mobile:leading-[1.02] compact-desktop:my-4.5 compact-desktop:text-[clamp(60px,11vh,83px)] compact-mobile:my-3.5 compact-mobile:text-[clamp(44px,11.5vw,65px)] landscape-short:text-[54px]"
+            >
               <span className="hero-line block">Un ratito</span>
-              <span className="hero-line block"><em className="font-normal tracking-[-.055em]">entre flores.</em></span>
+              <span className="hero-line block">
+                <em className="font-normal tracking-[-.055em]">
+                  entre flores.
+                </em>
+              </span>
             </h1>
             <p className="hero-item max-w-80 text-[16px] leading-[1.7] mobile:text-[14px] mobile:leading-[1.55] compact-desktop:text-[14px] compact-mobile:text-[13px] compact-mobile:leading-[1.4]">
-              Deja que el mundo espere.<br />Aquí las manos crean y las flores hablan.
+              Deja que el mundo espere.
+              <br />
+              Aquí las manos crean y las flores hablan.
             </p>
-            <a href="#ramos" className="hero-item pointer-events-auto mt-7.25 inline-flex items-center gap-8 rounded-[50px] bg-wine px-6 py-4.5 text-[14px] text-cream transition-[background,translate] duration-250 hover:-translate-y-0.75 hover:bg-[#773449] mobile:mt-5 mobile:px-5.25 mobile:py-3.75 mobile:text-[13px] compact-desktop:mt-4.5 compact-desktop:px-5.5 compact-desktop:py-3.5 compact-mobile:mt-3.5 compact-mobile:px-4.5 compact-mobile:py-3.25 compact-mobile:text-[12px]">
-              Encuentra tu inspiración <span aria-hidden="true" className="text-[21px] leading-none">↗</span>
+            <a
+              href="#ramos"
+              className="hero-item pointer-events-auto mt-7.25 inline-flex items-center gap-8 rounded-[50px] bg-wine px-6 py-4.5 text-[14px] text-cream transition-[background,translate] duration-250 hover:-translate-y-0.75 hover:bg-[#773449] mobile:mt-5 mobile:px-5.25 mobile:py-3.75 mobile:text-[13px] compact-desktop:mt-4.5 compact-desktop:px-5.5 compact-desktop:py-3.5 compact-mobile:mt-3.5 compact-mobile:px-4.5 compact-mobile:py-3.25 compact-mobile:text-[12px]"
+            >
+              Encuentra tu inspiración{' '}
+              <span aria-hidden="true" className="text-[21px] leading-none">
+                ↗
+              </span>
             </a>
           </div>
 
-          <div aria-hidden="true" className="hero-seal absolute right-[5.4%] bottom-[16%] z-2 flex size-37 flex-col items-center justify-center gap-2.25 rounded-full bg-yellow transform-[rotate(12deg)] tablet:size-30 mobile:right-[7%] mobile:bottom-[17%] mobile:size-25 compact-mobile:bottom-[14%] compact-mobile:size-21 landscape-short:hidden">
-            <span className="text-[9px] tracking-[.14em] tablet:text-[8px] mobile:text-[7px] compact-mobile:text-[6px]">UN RAMO.</span>
-            <b className="text-center font-editorial text-[25px] leading-[1.02] font-normal tablet:text-[22px] mobile:text-[19px] compact-mobile:text-[16px]">Mil maneras<br />de sentir.</b>
-            <span className="text-[9px] tracking-[.14em] tablet:text-[8px] mobile:text-[7px] compact-mobile:text-[6px]">LA CASITA DE JAMAICA</span>
+          <div
+            aria-hidden="true"
+            className="hero-seal absolute right-[5.4%] bottom-[16%] z-2 flex size-37 transform-[rotate(12deg)] flex-col items-center justify-center gap-2.25 rounded-full bg-yellow tablet:size-30 mobile:right-[7%] mobile:bottom-[17%] mobile:size-25 compact-mobile:bottom-[14%] compact-mobile:size-21 landscape-short:hidden"
+          >
+            <span className="text-[9px] tracking-[.14em] tablet:text-[8px] mobile:text-[7px] compact-mobile:text-[6px]">
+              UN RAMO.
+            </span>
+            <b className="text-center font-editorial text-[25px] leading-[1.02] font-normal tablet:text-[22px] mobile:text-[19px] compact-mobile:text-[16px]">
+              Mil maneras
+              <br />
+              de sentir.
+            </b>
+            <span className="text-[9px] tracking-[.14em] tablet:text-[8px] mobile:text-[7px] compact-mobile:text-[6px]">
+              LA CASITA DE JAMAICA
+            </span>
           </div>
         </section>
 
@@ -105,5 +173,5 @@ export default function Home() {
       <SiteFooter />
       <Analytics />
     </div>
-  );
+  )
 }

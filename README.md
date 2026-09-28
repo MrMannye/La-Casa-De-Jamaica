@@ -69,3 +69,28 @@ pnpm dev
 
 El proyecto usa pnpm 9.0.6, indicado en `packageManager`.
 Para verificar la compilación de producción: `pnpm build`.
+
+## Lint y formato
+
+- `pnpm lint`: revisa Next.js, TypeScript y las clases Tailwind (desconocidas,
+  duplicadas, concatenadas o en conflicto).
+- `pnpm lint:fix`: aplica las correcciones automáticas disponibles de ESLint.
+  Incluye las clases canónicas de Tailwind, por ejemplo `min-h-[220px]` →
+  `min-h-55`, también con variantes como `mobile:`. La conversión de píxeles
+  a la escala rem asume un tamaño raíz de 16 px (`rootFontSize` en ESLint).
+- `pnpm format`: formatea los archivos y ordena las clases Tailwind con Prettier.
+- `pnpm format:check`: comprueba el formato sin modificar archivos.
+
+ESLint usa `eslint-plugin-better-tailwindcss` para Tailwind 4. Prettier usa
+el plugin oficial `prettier-plugin-tailwindcss`; ambos leen `app/globals.css`
+para reconocer los colores y variantes del proyecto. El estilo configurado usa
+dos espacios, comillas simples y no añade punto y coma en JavaScript/TypeScript.
+Esto no equivale a habilitar todas las reglas de StandardJS.
+
+Los selectores de GSAP y las clases CSS propias están permitidos explícitamente
+en `eslint.config.mjs`. Prettier se encarga del orden y el formato; ESLint mantiene
+las reglas de corrección para evitar cambios de formato contradictorios.
+
+En VS Code, instala las extensiones recomendadas del espacio de trabajo:
+ESLint, Prettier y Tailwind CSS IntelliSense. La configuración de `.vscode`
+activa el formateo y las correcciones de ESLint al guardar.

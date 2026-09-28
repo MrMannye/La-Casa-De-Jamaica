@@ -1,0 +1,10 @@
+{
+  "tailwindCSS.lint.suggestCanonicalClasses": "ignore",
+  "[javascript][javascriptreact][typescript][typescriptreact][css][json][jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}
