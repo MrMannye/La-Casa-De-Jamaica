@@ -10,6 +10,7 @@ import { WorkshopExperience } from './components/workshop-experience';
 import { MonthlyWorkshops } from './components/monthly-workshops';
 import { SiteHeader } from './components/site-header';
 import { SiteFooter } from './components/site-footer';
+import { Analytics } from "@vercel/analytics/next"
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -102,6 +103,7 @@ export default function Home() {
         <MonthlyWorkshops />
       </main>
       <SiteFooter />
+      <Analytics />
     </div>
   );
 }
