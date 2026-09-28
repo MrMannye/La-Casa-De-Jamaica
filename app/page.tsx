@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { BouquetGallery } from './components/bouquet-gallery';
+import { WorkshopExperience } from './components/workshop-experience';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -123,9 +124,9 @@ export default function Home() {
         </section>
 
         <BouquetGallery reduceMotion={reduceMotion} />
+        <WorkshopExperience reduceMotion={reduceMotion} />
 
         <div className="grid gap-10 px-[7%] py-[100px] font-editorial text-[32px] mobile:px-[6%] mobile:py-[70px] mobile:text-[26px]">
-          <section id="taller" aria-label="El taller"><p>Próximamente: así es el taller.</p></section>
           <section id="talleres" aria-label="Talleres del mes"><p>Próximamente: talleres del mes.</p></section>
         </div>
       </main>

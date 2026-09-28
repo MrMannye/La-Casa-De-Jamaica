@@ -29,6 +29,7 @@
 @custom-variant wide (@media (min-width: 1600px));
 @custom-variant gallery-tablet (@media (max-width: 1100px));
 @custom-variant tablet (@media (max-width: 1050px));
+@custom-variant workshop-tablet (@media (min-width: 701px) and (max-width: 900px));
 @custom-variant mobile (@media (max-width: 700px));
 @custom-variant compact-desktop (@media (max-height: 740px) and (min-width: 701px));
 @custom-variant compact-mobile (@media (max-height: 740px) and (max-width: 700px));
