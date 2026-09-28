@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { BouquetGallery } from './components/bouquet-gallery';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -58,20 +59,6 @@ export default function Home() {
       <a href="#main" className="fixed -top-20 left-[15px] z-30 bg-wine p-3 text-white focus:top-2.5">
         Saltar al contenido
       </a>
-
-      <div className="absolute inset-x-0 top-0 z-20 flex h-7 items-center justify-between bg-wine px-[4.6%] text-[12px] tracking-[.09em] text-cream mobile:px-[5%] mobile:text-[10px] mobile:tracking-[.05em]">
-        <span>LA CASITA DE JAMAICA <span className="mobile:hidden">/ FLORES &amp; TALLERES</span></span>
-        <label className="flex cursor-pointer items-center gap-[7px] text-[12px] tracking-normal mobile:text-[11px]">
-          <input
-            type="checkbox"
-            disabled={reduceMotion === null}
-            checked={reduceMotion === true}
-            onChange={event => setReduceMotion(event.target.checked)}
-            className="size-3.5 accent-yellow"
-          />
-          Reducir movimiento
-        </label>
-      </div>
 
       <header
         data-scrolled={scrolled}
@@ -128,14 +115,6 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="absolute inset-x-[4.6%] bottom-[27px] z-2 flex items-center justify-between text-[11px] tracking-[.09em] mobile:inset-x-[6%] mobile:bottom-[15px]">
-            <span className="mobile:max-w-[120px] mobile:text-[8px] mobile:leading-[1.7]">UN ESPACIO PARA CREAR, A TU RITMO.</span>
-            <a href="#ramos" aria-label="Bajar a la galería de ramos" className="flex items-center gap-[18px] text-[12px] tracking-normal mobile:gap-2.5 mobile:text-[10px]">
-              <span>Hay mucho por florecer</span>
-              <span aria-hidden="true" className="grid size-10 place-items-center rounded-full border border-wine bg-cream text-[22px] mobile:size-[30px] mobile:text-[19px]">↓</span>
-            </a>
-          </div>
-
           <div aria-hidden="true" className="hero-seal absolute right-[5.4%] bottom-[16%] z-2 flex size-[148px] flex-col items-center justify-center gap-[9px] rounded-full bg-yellow [transform:rotate(12deg)] tablet:size-[120px] mobile:right-[7%] mobile:bottom-[17%] mobile:size-[100px] compact-mobile:bottom-[14%] compact-mobile:size-[84px] landscape-short:hidden">
             <span className="text-[9px] tracking-[.14em] tablet:text-[8px] mobile:text-[7px] compact-mobile:text-[6px]">UN RAMO.</span>
             <b className="text-center font-editorial text-[25px] leading-[1.02] font-normal tablet:text-[22px] mobile:text-[19px] compact-mobile:text-[16px]">Mil maneras<br />de sentir.</b>
@@ -143,8 +122,9 @@ export default function Home() {
           </div>
         </section>
 
+        <BouquetGallery reduceMotion={reduceMotion} />
+
         <div className="grid gap-10 px-[7%] py-[100px] font-editorial text-[32px] mobile:px-[6%] mobile:py-[70px] mobile:text-[26px]">
-          <section id="ramos" aria-label="Galería de ramos"><p>Próximamente: los ramos.</p></section>
           <section id="taller" aria-label="El taller"><p>Próximamente: así es el taller.</p></section>
           <section id="talleres" aria-label="Talleres del mes"><p>Próximamente: talleres del mes.</p></section>
         </div>
