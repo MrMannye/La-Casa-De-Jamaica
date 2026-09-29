@@ -31,6 +31,21 @@ se recalcula al cambiar el tamaño o cargar las fuentes y señala el paso actual
 La preferencia de movimiento reducido del sistema elimina las entradas animadas y conserva el indicador de lectura.
 La sección «Talleres del mes» muestra las tres primeras fechas y enlaza al calendario.
 
+## Entrada a la casita
+
+`app/components/casita-entrance.tsx` reproduce la fachada del prototipo con su
+imagen original (`public/assets/casita-entrada.webp`). Una escena sticky de
+310svh amplía la puerta y revela el hero con una máscara arqueada ligada al
+scroll. La geometría se recalcula al redimensionar; volver hacia arriba revierte
+la entrada. El botón «Entrar» y el enlace de salto permiten llegar directamente
+al hero con el foco en su título, también mediante teclado.
+
+El control «Reducir movimiento» respeta inicialmente la preferencia del sistema.
+En ese modo, o si el navegador no soporta la máscara, fachada y hero se muestran
+como secciones normales sin zoom. Los enlaces del hero y la navegación permanecen
+inactivos mientras están ocultos por la fachada. La imagen es conceptual, creada
+para el prototipo; no representa una fotografía del local real.
+
 ## Talleres de octubre
 
 - `/talleres`: calendario de octubre de 2026, filtros por categoría, vista rápida,

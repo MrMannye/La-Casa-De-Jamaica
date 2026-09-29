@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-export function SiteHeader({ workshopsPage = false }: { workshopsPage?: boolean }) {
+export function SiteHeader({ workshopsPage = false, entranceHidden = false }: { workshopsPage?: boolean; entranceHidden?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const sync = () => setScrolled(window.scrollY > 24);
@@ -15,7 +15,7 @@ export function SiteHeader({ workshopsPage = false }: { workshopsPage?: boolean 
   return (
     <>
       <a href="#main" className="fixed -top-20 left-[15px] z-30 bg-wine p-3 text-white focus:top-2.5">Saltar al contenido</a>
-      <header data-scrolled={scrolled} className="site-header fixed inset-x-[4.6%] top-[46px] z-15 flex h-[86px] items-center justify-between rounded-[22px] border border-[#ffffff85] bg-cream/[.64] px-7 shadow-[0_8px_36px_#501c320b,inset_0_1px_0_#ffffffb0] backdrop-blur-[20px] backdrop-saturate-[140%] transition-[top,background,box-shadow] duration-300 data-[scrolled=true]:top-[18px] data-[scrolled=true]:bg-cream/[.82] data-[scrolled=true]:shadow-[0_10px_36px_#501c3214,inset_0_1px_0_#ffffffb0] tablet:px-[22px] mobile:inset-x-[4%] mobile:top-[42px] mobile:h-[74px] mobile:rounded-[19px] mobile:px-[17px] mobile:data-[scrolled=true]:top-3 compact-desktop:top-10 compact-desktop:h-[70px] compact-desktop:data-[scrolled=true]:top-3">
+      <header inert={entranceHidden} aria-hidden={entranceHidden} style={entranceHidden ? { visibility: 'hidden', opacity: 0, pointerEvents: 'none' } : undefined} data-scrolled={scrolled} className="site-header fixed inset-x-[4.6%] top-[46px] z-15 flex h-[86px] items-center justify-between rounded-[22px] border border-[#ffffff85] bg-cream/[.64] px-7 shadow-[0_8px_36px_#501c320b,inset_0_1px_0_#ffffffb0] backdrop-blur-[20px] backdrop-saturate-[140%] transition-[top,background,box-shadow] duration-300 data-[scrolled=true]:top-[18px] data-[scrolled=true]:bg-cream/[.82] data-[scrolled=true]:shadow-[0_10px_36px_#501c3214,inset_0_1px_0_#ffffffb0] tablet:px-[22px] mobile:inset-x-[4%] mobile:top-[42px] mobile:h-[74px] mobile:rounded-[19px] mobile:px-[17px] mobile:data-[scrolled=true]:top-3 compact-desktop:top-10 compact-desktop:h-[70px] compact-desktop:data-[scrolled=true]:top-3">
         <Link href={workshopsPage ? '/' : '/#inicio'} aria-label="La Casita de Jamaica, inicio" className="flex items-center gap-[13px] font-editorial text-[27px] leading-[.92] tracking-[-1.1px] mobile:gap-2 mobile:text-[21px]">
           <span aria-hidden="true" className="font-[Georgia,serif] text-[53px] leading-none mobile:text-[36px]">✳</span>
           <span>la casita<span className="block text-[25px] mobile:text-[20px]">de Jamaica</span></span>

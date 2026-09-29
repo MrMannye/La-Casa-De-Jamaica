@@ -1,10 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
+import { CasitaEntrance } from './components/casita-entrance';
 import { BouquetGallery } from './components/bouquet-gallery';
 import { WorkshopExperience } from './components/workshop-experience';
 import { MonthlyWorkshops } from './components/monthly-workshops';
@@ -12,10 +10,8 @@ import { SiteHeader } from './components/site-header';
 import { SiteFooter } from './components/site-footer';
 import { Analytics } from "@vercel/analytics/next"
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
-
 export default function Home() {
-  const root = useRef<HTMLDivElement>(null);
+  const [inside, setInside] = useState(false);
   const [reduceMotion, setReduceMotion] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -33,32 +29,12 @@ export default function Home() {
     return () => document.documentElement.classList.remove('reduce-motion');
   }, [reduceMotion]);
 
-  useGSAP(() => {
-    // Read the system preference before starting any entrance animation.
-    if (reduceMotion !== false) return;
-
-    gsap.from('.hero-art img', { scale: 1.06, duration: 1.65, ease: 'power2.out' });
-    gsap.from('.hero-line', { y: 35, opacity: 0, duration: 1, stagger: 0.13, ease: 'power3.out', delay: 0.1 });
-    gsap.from('.hero-item', { y: 15, opacity: 0, duration: 0.75, stagger: 0.12, delay: 0.35, ease: 'power2.out' });
-    gsap.from('.hero-seal', { rotation: -10, scale: 0.9, opacity: 0, duration: 1.1, delay: 0.5, ease: 'power2.out' });
-
-    const media = gsap.matchMedia();
-    media.add('(min-width: 701px)', () => {
-      gsap.to('.hero-art img', {
-        y: 40,
-        ease: 'none',
-        scrollTrigger: { trigger: '#inicio', start: 'top top', end: 'bottom top', scrub: 1 },
-      });
-    });
-
-    return () => media.revert();
-  }, { scope: root, dependencies: [reduceMotion], revertOnUpdate: true });
-
   return (
-    <div ref={root}>
-      <SiteHeader />
+    <div style={{ overflowAnchor: 'none' }}>
+      <SiteHeader entranceHidden={!inside} />
 
       <main id="main">
+        <CasitaEntrance reduceMotion={reduceMotion} onInsideChange={setInside}>
         <section id="inicio" aria-labelledby="hero-title" className="relative flex h-svh min-h-0 items-center overflow-hidden mobile:block landscape-short:h-auto landscape-short:min-h-svh">
           <div className="hero-art absolute inset-y-0 right-0 h-full w-[78%] overflow-hidden wide:w-[74%] tablet:opacity-90 mobile:top-auto mobile:bottom-[53px] mobile:h-[48%] mobile:w-full mobile:opacity-100 compact-mobile:h-[43%]">
             <Image
@@ -78,10 +54,10 @@ export default function Home() {
               <span aria-hidden="true" className="text-[20px]">✳</span>
               MERCADO JAMAICA · CIUDAD DE MÉXICO
             </p>
-            <h1 id="hero-title" className="mt-[27px] mb-7 font-editorial text-[clamp(75px,7.6vw,119px)] leading-[1.01] font-normal tracking-[-.057em] wide:text-[133px] tablet:text-[clamp(68px,9vw,95px)] mobile:my-[18px] mobile:text-[clamp(51px,12.8vw,82px)] mobile:leading-[1.02] compact-desktop:my-[18px] compact-desktop:text-[clamp(60px,11vh,83px)] compact-mobile:my-3.5 compact-mobile:text-[clamp(44px,11.5vw,65px)] landscape-short:text-[54px]">
+            <h2 id="hero-title" tabIndex={-1} className="mt-[27px] mb-7 font-editorial text-[clamp(75px,7.6vw,119px)] leading-[1.01] font-normal tracking-[-.057em] wide:text-[133px] tablet:text-[clamp(68px,9vw,95px)] mobile:my-[18px] mobile:text-[clamp(51px,12.8vw,82px)] mobile:leading-[1.02] compact-desktop:my-[18px] compact-desktop:text-[clamp(60px,11vh,83px)] compact-mobile:my-3.5 compact-mobile:text-[clamp(44px,11.5vw,65px)] landscape-short:text-[54px]">
               <span className="hero-line block">Un ratito</span>
               <span className="hero-line block"><em className="font-normal tracking-[-.055em]">entre flores.</em></span>
-            </h1>
+            </h2>
             <p className="hero-item max-w-80 text-[16px] leading-[1.7] mobile:text-[14px] mobile:leading-[1.55] compact-desktop:text-[14px] compact-mobile:text-[13px] compact-mobile:leading-[1.4]">
               Deja que el mundo espere.<br />Aquí las manos crean y las flores hablan.
             </p>
@@ -97,6 +73,7 @@ export default function Home() {
           </div>
         </section>
 
+        </CasitaEntrance>
         <BouquetGallery reduceMotion={reduceMotion} />
         <WorkshopExperience reduceMotion={reduceMotion} />
 
