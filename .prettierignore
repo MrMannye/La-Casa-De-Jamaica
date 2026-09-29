@@ -1,0 +1,10 @@
+node_modules/
+.pnpm-store/
+.next/
+out/
+build/
+coverage/
+next-env.d.ts
+*.tsbuildinfo
+pnpm-lock.yaml
+public/
